@@ -312,8 +312,8 @@ While this is an academic project, suggestions and improvements are welcome!
 
 **Author:** [Your Name]  
 **Email:** [Your Email]  
-**GitHub:** [@your-username](https://github.com/adityaamitra)  
-**LinkedIn:** [Your LinkedIn](https://www.linkedin.com/in/mitraditya23/)
+**GitHub:** [adityaamitra](https://github.com/adityaamitra)  
+**LinkedIn:** [Aditya Mitra](https://www.linkedin.com/in/mitraditya23/)
 
 ## 🔗 Related Resources
 

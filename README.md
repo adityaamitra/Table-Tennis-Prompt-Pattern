@@ -310,8 +310,8 @@ While this is an academic project, suggestions and improvements are welcome!
 
 ## 📧 Contact
 
-**Author:** [Your Name]  
-**Email:** [Your Email]  
+**Author:** [Aditya Mitra]  
+**Email:** [mitra.adi@northeastern.edu]  
 **GitHub:** [adityaamitra](https://github.com/adityaamitra)  
 **LinkedIn:** [Aditya Mitra](https://www.linkedin.com/in/mitraditya23/)
 

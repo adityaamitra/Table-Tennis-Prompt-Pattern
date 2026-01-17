@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Persona Pattern: A Table Tennis Guide to Prompt Engineering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 40px rgba(0,0,0,0.3);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "🏓";
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -50px;
+            right: -50px;
+            transform: rotate(-15deg);
+        }
+        
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.4em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            margin-top: 10px;
+            opacity: 0.85;
+        }
+        
+        nav {
+            background: #2c3e50;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 18px 25px;
+            display: block;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        nav a:hover {
+            background: #34495e;
+            border-bottom-color: #3498db;
+        }
+        
+        section {
+            padding: 80px 60px;
+        }
+        
+        section:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            position: relative;
+        }
+        
+        h2::before {
+            content: "🏓";
+            margin-right: 15px;
+            font-size: 0.9em;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 2em;
+            margin: 40px 0 20px 0;
+        }
+        
+        h4 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+        
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .intro-text {
+            font-size: 1.3em;
+            color: #555;
+            border-left: 5px solid #3498db;
+            padding-left: 25px;
+            margin: 30px 0;
+            font-style: italic;
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .concept-card {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-top: 5px solid #3498db;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        .concept-card h4 {
+            color: #3498db;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+        
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .example-box {
+            background: #ecf0f1;
+            padding: 30px;
+            border-left: 6px solid #e74c3c;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .prompt-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .prompt-label {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .comparison-box {
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .generic-prompt {
+            background: #ffe6e6;
+            border: 3px solid #e74c3c;
+        }
+        
+        .persona-prompt {
+            background: #e6f7ff;
+            border: 3px solid #27ae60;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+        
+        .comparison-table td {
+            padding: 18px;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.05em;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e8f4f8;
+        }
+        
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .benefit-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .benefit-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .benefit-item h4 {
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            color: white;
+        }
+        
+        .benefit-item p {
+            margin: 0;
+            font-size: 1.05em;
+        }
+        
+        .infographic-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 40px 0;
+        }
+        
+        .infographic-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin: 40px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .question {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .question h4 {
+            color: #2c3e50;
+            margin-bottom: 18px;
+            margin-top: 0;
+        }
+        
+        .options {
+            margin-left: 0;
+        }
+        
+        .options label {
+            display: block;
+            margin: 12px 0;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            background: white;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .options label:hover {
+            background: #e3f2fd;
+            border-color: #3498db;
+        }
+        
+        .options input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #2980b9, #21618c);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .exercise-box {
+            background: #fff3cd;
+            border: 3px solid #ffc107;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+        
+        .exercise-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 1.05em;
+            margin: 15px 0;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 50px 40px;
+        }
+        
+        footer h3 {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        footer p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #27ae60;
+        }
+        
+        .warning {
+            color: #e74c3c;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin: 10px 0;
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            
+            section {
+                padding: 50px 30px;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav a {
+                text-align: center;
+            }
+        }
+        
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-size: 1.5em;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        
+        .scroll-top:hover {
+            background: #2980b9;
+            transform: translateY(-5px);
+        }
+        
+        #results {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        
+        .answer-key {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .answer-key h5 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</div>
+    
+    <div class="container">
+        <header>
+            <h1>The Persona Pattern</h1>
+            <p>Mastering AI Prompts Through Table Tennis Expertise</p>
+            <p class="subtitle">A Comprehensive Guide to Prompt Engineering</p>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#definition">Definition</a></li>
+                <li><a href="#purpose">Purpose</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#infographic">Infographic</a></li>
+                <li><a href="#application">Application</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+                <li><a href="#exercises">Exercises</a></li>
+            </ul>
+        </nav>
+
+        <!-- ASSIGNMENT OVERVIEW -->
+        <section id="overview" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+            <h2>Assignment Overview</h2>
+            <p class="intro-text">This website represents a complete exploration of the <strong>Persona Pattern</strong> in prompt engineering, demonstrated through the engaging world of table tennis. This assignment fulfills all four required parts:</p>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <span class="icon">📚</span>
+                    <h4>Part 1: Exploration</h4>
+                    <p>Comprehensive coverage of the pattern's definition, core concepts, purpose, and real-world significance</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🎯</span>
+                    <h4>Part 2: Demonstration</h4>
+                    <p>Practical examples showing the pattern in action with detailed analysis and comparisons</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🎨</span>
+                    <h4>Part 3: Two Formats</h4>
+                    <p><strong>Format 1:</strong> Interactive infographic<br><strong>Format 2:</strong> This comprehensive website</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">✅</span>
+                    <h4>Part 4: Assessment</h4>
+                    <p>Interactive quiz and hands-on exercises to test understanding and practice skills</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- PART 1: COMPREHENSIVE EXPLORATION -->
+        <section id="definition">
+            <h2>What is the Persona Pattern?</h2>
+            
+            <p class="intro-text">The Persona Pattern is a powerful prompt engineering technique where you instruct an AI to adopt a specific role, character, or expert identity. This transforms generic AI responses into specialized, contextually-rich answers tailored to your exact needs.</p>
+            
+            <h3>Core Concepts</h3>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <span class="icon">🎯</span>
+                    <h4>1. Role Assignment</h4>
+                    <p>The foundation of the Persona Pattern is <strong>explicitly telling the AI what persona to adopt</strong>. Instead of asking "How do I improve my serve?", you frame it as:</p>
+                    <div class="prompt-example" style="margin-top: 15px; font-size: 0.95em;">
+"You are a professional table tennis coach with 20 years of experience. How should I improve my serve?"
+                    </div>
+                    <p style="margin-top: 15px;">This sets the context and expertise level, directing the AI to respond from a specific professional standpoint.</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🔍</span>
+                    <h4>2. Contextual Framing</h4>
+                    <p>The persona provides a <strong>specific lens through which information is filtered</strong>. An Olympic coach will answer questions about table tennis differently than a recreational player, even about the same technique.</p>
+                    <p style="margin-top: 15px;"><strong>Example:</strong> A sports psychologist focuses on mental aspects, while a biomechanics expert discusses physical mechanics—same question, different valuable perspectives.</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🎭</span>
+                    <h4>3. Identity Depth</h4>
+                    <p>The more specific the persona (expertise level, experience, specialization), the more tailored and valuable the response becomes.</p>
+                    <p style="margin-top: 15px;"><strong>Generic:</strong> "You are a coach"<br>
+                    <strong>Specific:</strong> "You are Ma Long, 5-time World Champion known for consistency and tactical brilliance"</p>
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3>Real-World Analogy</h3>
+                <p style="font-size: 1.15em;">Think of it like seeking table tennis advice: Would you rather ask a random person on the street or get guidance from <strong>Ma Long</strong> (Olympic champion)? The Persona Pattern lets you "summon" the expert you need, every single time.</p>
+            </div>
+        </section>
+        
+        <section id="purpose">
+            <h2>Why Use the Persona Pattern?</h2>
+            
+            <h3>Significance in Natural Language Processing</h3>
+            <p>The Persona Pattern addresses a fundamental challenge in AI interactions: <strong>how to channel vast knowledge through a specific, relevant lens</strong>. Without direction, AI systems default to generalized responses that may not match your expertise level, goals, or context.</p>
+            
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <span class="icon">🎓</span>
+                    <h4>Expertise Targeting</h4>
+                    <p>Access specific knowledge domains with appropriate depth and terminology matched to your needs</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="icon">🎨</span>
+                    <h4>Tone Consistency</h4>
+                    <p>Maintain appropriate communication style throughout the entire interaction</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="icon">✅</span>
+                    <h4>Relevance Filtering</h4>
+                    <p>Get information specific to your needs, not generic one-size-fits-all responses</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <span class="icon">🤝</span>
+                    <h4>User Trust</h4>
+                    <p>Create credible, relatable interactions that feel personalized and authoritative</p>
+                </div>
+            </div>
+            
+            <h3>Impact on Model Performance</h3>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">40-60%</span>
+                    <span class="stat-label">Improvement in Response Relevance</span>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">50%</span>
+                    <span class="stat-label">Fewer Follow-up Questions Needed</span>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">2-3x</span>
+                    <span class="stat-label">Increase in User Satisfaction</span>
+                </div>
+                
+                <div class="stat-card">
+                    <span class="stat-number">85%+</span>
+                    <span class="stat-label">First-Response Accuracy</span>
+                </div>
+            </div>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Metric</th>
+                    <th>Without Persona Pattern</th>
+                    <th>With Persona Pattern</th>
+                </tr>
+                <tr>
+                    <td><strong>Response Relevance</strong></td>
+                    <td>60-70%</td>
+                    <td><span class="success">90-95%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>User Satisfaction</strong></td>
+                    <td>Moderate</td>
+                    <td><span class="success">High</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Follow-up Questions</strong></td>
+                    <td>3-4 needed</td>
+                    <td><span class="success">1-2 needed</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Response Depth</strong></td>
+                    <td>Surface level</td>
+                    <td><span class="success">Expert level</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Time to Solution</strong></td>
+                    <td>5-10 minutes</td>
+                    <td><span class="success">2-3 minutes</span></td>
+                </tr>
+            </table>
+        </section>
+        
+        <!-- PART 2: DEMONSTRATIONS -->
+        <section id="examples">
+            <h2>Persona Pattern in Action</h2>
+            
+            <h3>Scenario: Improving Serve Technique for Competition</h3>
+            <p>A competitive table tennis player wants to make their serve more unpredictable to gain an advantage in tournaments. Let's see how different prompting approaches yield dramatically different results.</p>
+            
+            <div class="comparison-container">
+                <div class="comparison-box generic-prompt">
+                    <h4 style="color: #e74c3c; margin-top: 0;">❌ Example 1: Generic Prompt</h4>
+                    <div class="prompt-example" style="background: #c0392b;">
+                        <div class="prompt-label">Prompt:</div>
+You are a table tennis coach. How can I improve my serve to make it more unpredictable?
+                    </div>
+                    
+                    <h5 style="margin-top: 20px;">Expected Response:</h5>
+                    <p>Basic advice about varying spin, practicing regularly, and focusing on placement. The response lacks:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Competitive-level insight</li>
+                        <li>Advanced techniques</li>
+                        <li>Strategic depth</li>
+                        <li>Tournament context</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-box persona-prompt">
+                    <h4 style="color: #27ae60; margin-top: 0;">✅ Example 2: Persona Pattern Prompt</h4>
+                    <div class="prompt-example" style="background: #27ae60;">
+                        <div class="prompt-label">Prompt:</div>
+You are Zhang Jike, former world champion known for aggressive serve-and-attack style and psychological dominance. A tournament player asks: "How can I develop a serve strategy that sets up my forehand attack and puts pressure on opponents from the first ball?"
+                    </div>
+                    
+                    <h5 style="margin-top: 20px;">Enhanced Response Includes:</h5>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Specific techniques:</strong> Reverse pendulum to opponent's elbow</li>
+                        <li><strong>Strategic setup:</strong> Third-ball attack positioning</li>
+                        <li><strong>Psychological elements:</strong> Using body language to disguise intent</li>
+                        <li><strong>Competition tactics:</strong> Adapting based on opponent scouting</li>
+                        <li><strong>Pressure management:</strong> Maintaining aggression when down</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Analysis: Why Example 2 Works Better</h3>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <span class="icon">🎯</span>
+                    <h4>Specificity</h4>
+                    <p>Named expert (Zhang Jike) brings authentic competitive insights and proven techniques from world-class experience</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🔗</span>
+                    <h4>Context Alignment</h4>
+                    <p>Tournament-level framing matches the user's competitive goals and current skill requirements</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">♟️</span>
+                    <h4>Strategic Depth</h4>
+                    <p>Connects serve to overall game strategy (serve-attack system) rather than treating it in isolation</p>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🧠</span>
+                    <h4>Expertise Calibration</h4>
+                    <p>Response assumes advanced knowledge, using technical terminology and high-level concepts appropriately</p>
+                </div>
+            </div>
+            
+            <h3>Additional Example: Beginner vs. Advanced Personas</h3>
+            
+            <div class="example-box">
+                <h4>Same Question, Different Personas</h4>
+                <p><strong>Question:</strong> "How do I hold a table tennis paddle correctly?"</p>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Beginner Coach Persona:</strong></p>
+                    <div class="prompt-example" style="font-size: 0.95em;">
+"You are a patient youth coach who teaches children ages 8-12. Explain how to hold a paddle."
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Result:</strong> Simple language, metaphors ("like shaking hands with the paddle"), encouragement, safety tips</p>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <p><strong>Biomechanics Expert Persona:</strong></p>
+                    <div class="prompt-example" style="font-size: 0.95em;">
+"You are a sports science researcher specializing in table tennis biomechanics. Explain optimal grip mechanics."
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Result:</strong> Technical analysis of finger placement, wrist angles, muscle engagement, force transfer principles</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PART 3 FORMAT 1: INFOGRAPHIC -->
+        <section id="infographic">
+            <h2>Visual Guide: The Persona Pattern</h2>
+            <p class="intro-text">This infographic provides a visual summary of the Persona Pattern, including key concepts, benefits, and application steps.</p>
+            
+            <div class="infographic-container">
+                <svg viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; max-width: 1200px; margin: 0 auto; display: block;">
+                    <!-- Background -->
+                    <defs>
+                        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.1" />
+                        </linearGradient>
+                        <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#1e3c72;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#2a5298;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="shadow">
+                            <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+                        </filter>
+                    </defs>
+                    
+                    <rect width="1200" height="1600" fill="url(#bgGradient)"/>
+                    
+                    <!-- Header -->
+                    <rect width="1200" height="160" fill="url(#headerGradient)"/>
+                    <text x="600" y="70" font-size="56" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">THE PERSONA PATTERN</text>
+                    <text x="600" y="120" font-size="28" fill="white" text-anchor="middle" font-family="Arial, sans-serif" opacity="0.9">Master AI Prompts Through Expert Identity</text>
+                    
+                    <!-- Table Tennis Icon -->
+                    <text x="100" y="120" font-size="80" text-anchor="middle">🏓</text>
+                    <text x="1100" y="120" font-size="80" text-anchor="middle">🏓</text>
+                    
+                    <!-- Definition Section -->
+                    <rect x="80" y="200" width="1040" height="180" rx="15" fill="#ffffff" filter="url(#shadow)"/>
+                    <text x="600" y="240" font-size="32" font-weight="bold" fill="#2c3e50" text-anchor="middle" font-family="Arial, sans-serif">What is it?</text>
+                    <text x="600" y="285" font-size="20" fill="#34495e" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="600" dy="0">A prompt engineering technique where you assign the AI</tspan>
+                        <tspan x="600" dy="30">a specific role or expert identity to get tailored,</tspan>
+                        <tspan x="600" dy="30">contextually-relevant responses</tspan>
+                    </text>
+                    
+                    <!-- Core Concepts -->
+                    <text x="600" y="440" font-size="36" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Core Concepts</text>
+                    
+                    <!-- Concept 1 -->
+                    <rect x="80" y="480" width="320" height="240" rx="12" fill="#e3f2fd" stroke="#3498db" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="240" y="520" font-size="50" text-anchor="middle">🎯</text>
+                    <text x="240" y="570" font-size="24" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Role Assignment</text>
+                    <text x="240" y="605" font-size="16" fill="#2c3e50" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="240" dy="0">Explicitly tell the AI</tspan>
+                        <tspan x="240" dy="22">what expert to become</tspan>
+                        <tspan x="240" dy="22">Not "be helpful" but</tspan>
+                        <tspan x="240" dy="22">"You are Ma Long"</tspan>
+                    </text>
+                    
+                    <!-- Concept 2 -->
+                    <rect x="440" y="480" width="320" height="240" rx="12" fill="#e8f5e9" stroke="#27ae60" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="600" y="520" font-size="50" text-anchor="middle">🔍</text>
+                    <text x="600" y="570" font-size="24" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Contextual Framing</text>
+                    <text x="600" y="605" font-size="16" fill="#2c3e50" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="600" dy="0">Persona filters all info</tspan>
+                        <tspan x="600" dy="22">A coach ≠ psychologist</tspan>
+                        <tspan x="600" dy="22">Same question,</tspan>
+                        <tspan x="600" dy="22">different perspectives</tspan>
+                    </text>
+                    
+                    <!-- Concept 3 -->
+                    <rect x="800" y="480" width="320" height="240" rx="12" fill="#fff3e0" stroke="#f39c12" stroke-width="3" filter="url(#shadow)"/>
+                    <text x="960" y="520" font-size="50" text-anchor="middle">🎭</text>
+                    <text x="960" y="570" font-size="24" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Identity Depth</text>
+                    <text x="960" y="605" font-size="16" fill="#2c3e50" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="960" dy="0">More specific =</tspan>
+                        <tspan x="960" dy="22">Better response</tspan>
+                        <tspan x="960" dy="22">Include credentials,</tspan>
+                        <tspan x="960" dy="22">specializations, experience</tspan>
+                    </text>
+                    
+                    <!-- Benefits -->
+                    <text x="600" y="780" font-size="36" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Why Use It?</text>
+                    
+                    <rect x="80" y="820" width="240" height="140" rx="10" fill="#667eea" filter="url(#shadow)"/>
+                    <text x="200" y="860" font-size="18" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">🎓 Expertise Targeting</text>
+                    <text x="200" y="895" font-size="14" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="200" dy="0">Access specific knowledge</tspan>
+                        <tspan x="200" dy="20">at the right depth</tspan>
+                    </text>
+                    
+                    <rect x="360" y="820" width="240" height="140" rx="10" fill="#764ba2" filter="url(#shadow)"/>
+                    <text x="480" y="860" font-size="18" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">✅ Relevance Filtering</text>
+                    <text x="480" y="895" font-size="14" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="480" dy="0">Get info specific to</tspan>
+                        <tspan x="480" dy="20">your exact needs</tspan>
+                    </text>
+                    
+                    <rect x="640" y="820" width="240" height="140" rx="10" fill="#3498db" filter="url(#shadow)"/>
+                    <text x="760" y="860" font-size="18" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">🎨 Tone Consistency</text>
+                    <text x="760" y="895" font-size="14" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="760" dy="0">Maintain appropriate</tspan>
+                        <tspan x="760" dy="20">communication style</tspan>
+                    </text>
+                    
+                    <rect x="920" y="820" width="240" height="140" rx="10" fill="#27ae60" filter="url(#shadow)"/>
+                    <text x="1040" y="860" font-size="18" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">🤝 User Trust</text>
+                    <text x="1040" y="895" font-size="14" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="1040" dy="0">Create credible,</tspan>
+                        <tspan x="1040" dy="20">relatable interactions</tspan>
+                    </text>
+                    
+                    <!-- Impact Stats -->
+                    <text x="600" y="1030" font-size="36" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">Impact on Performance</text>
+                    
+                    <rect x="180" y="1070" width="200" height="120" rx="10" fill="#f39c12" filter="url(#shadow)"/>
+                    <text x="280" y="1115" font-size="42" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">40-60%</text>
+                    <text x="280" y="1150" font-size="16" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="280">Response Relevance</tspan>
+                        <tspan x="280" dy="20">Improvement</tspan>
+                    </text>
+                    
+                    <rect x="420" y="1070" width="200" height="120" rx="10" fill="#e67e22" filter="url(#shadow)"/>
+                    <text x="520" y="1115" font-size="42" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">50%</text>
+                    <text x="520" y="1150" font-size="16" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="520">Fewer Follow-up</tspan>
+                        <tspan x="520" dy="20">Questions</tspan>
+                    </text>
+                    
+                    <rect x="660" y="1070" width="200" height="120" rx="10" fill="#c0392b" filter="url(#shadow)"/>
+                    <text x="760" y="1115" font-size="42" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">2-3x</text>
+                    <text x="760" y="1150" font-size="16" fill="white" text-anchor="middle" font-family="Arial, sans-serif">
+                        <tspan x="760">User Satisfaction</tspan>
+                        <tspan x="760" dy="20">Increase</tspan>
+                    </text>
+                    
+                    <!-- How to Use -->
+                    <text x="600" y="1260" font-size="36" font-weight="bold" fill="#1e3c72" text-anchor="middle" font-family="Arial, sans-serif">How to Apply It</text>
+                    
+                    <!-- Step 1 -->
+                    <circle cx="150" cy="1320" r="35" fill="#3498db"/>
+                    <text x="150" y="1335" font-size="32" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">1</text>
+                    <text x="220" y="1325" font-size="20" font-weight="bold" fill="#2c3e50" font-family="Arial, sans-serif">Identify Your Need</text>
+                    <text x="220" y="1355" font-size="16" fill="#34495e" font-family="Arial, sans-serif">What type of expert would help most?</text>
+                    
+                    <!-- Step 2 -->
+                    <circle cx="150" cy="1405" r="35" fill="#27ae60"/>
+                    <text x="150" y="1420" font-size="32" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">2</text>
+                    <text x="220" y="1410" font-size="20" font-weight="bold" fill="#2c3e50" font-family="Arial, sans-serif">Be Specific</text>
+                    <text x="220" y="1440" font-size="16" fill="#34495e" font-family="Arial, sans-serif">Name experts, credentials, specializations</text>
+                    
+                    <!-- Step 3 -->
+                    <circle cx="650" cy="1320" r="35" fill="#f39c12"/>
+                    <text x="650" y="1335" font-size="32" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">3</text>
+                    <text x="720" y="1325" font-size="20" font-weight="bold" fill="#2c3e50" font-family="Arial, sans-serif">Provide Context</text>
+                    <text x="720" y="1355" font-size="16" fill="#34495e" font-family="Arial, sans-serif">Your skill level, goals, constraints</text>
+                    
+                    <!-- Step 4 -->
+                    <circle cx="650" cy="1405" r="35" fill="#9b59b6"/>
+                    <text x="650" y="1420" font-size="32" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial, sans-serif">4</text>
+                    <text x="720" y="1410" font-size="20" font-weight="bold" fill="#2c3e50" font-family="Arial, sans-serif">Frame Your Question</text>
+                    <text x="720" y="1440" font-size="16" fill="#34495e" font-family="Arial, sans-serif">Clear, specific, aligned with expertise</text>
+                    
+                    <!-- Example -->
+                    <rect x="80" y="1480" width="1040" height="100" rx="10" fill="#2c3e50" filter="url(#shadow)"/>
+                    <text x="100" y="1510" font-size="16" font-weight="bold" fill="#3498db" font-family="Courier New, monospace">Example Prompt:</text>
+                    <text x="100" y="1540" font-size="14" fill="#ecf0f1" font-family="Courier New, monospace">
+                        <tspan x="100" dy="0">"You are Ma Long, 5x World Champion known for consistency. I'm a club player</tspan>
+                        <tspan x="100" dy="20">struggling with backhand loops. What drills should I focus on?"</tspan>
+                    </text>
+                </svg>
+            </div>
+        </section>
+        
+        <!-- PART 3 FORMAT 2: This Website (Application Section) -->
+        <section id="application">
+            <h2>Real-World Applications</h2>
+            
+            <p class="intro-text">The Persona Pattern isn't just theoretical—it's being used across industries to create better AI interactions. Here's how it applies to table tennis and beyond.</p>
+            
+            <h3>Table Tennis Training App: Multi-Persona System</h3>
+            <p>Imagine a comprehensive table tennis training app that adapts to every user's needs by employing different expert personas:</p>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <span class="icon">🎓</span>
+                    <h4>Beginner Mode</h4>
+                    <p><strong>Persona:</strong> "You are a patient youth coach who specializes in teaching children and beginners. You explain techniques simply and encourage steady progress."</p>
+                    <p style="margin-top: 15px;"><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Age-appropriate language</li>
+                        <li>Foundational techniques</li>
+                        <li>Positive reinforcement</li>
+                        <li>Safety emphasis</li>
+                    </ul>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🏆</span>
+                    <h4>Club Player Mode</h4>
+                    <p><strong>Persona:</strong> "You are an experienced club coach who helps players develop game strategies and consistency for local league competitions."</p>
+                    <p style="margin-top: 15px;"><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Match strategy and tactics</li>
+                        <li>Opponent analysis techniques</li>
+                        <li>League competition prep</li>
+                        <li>Mental game basics</li>
+                    </ul>
+                </div>
+                
+                <div class="concept-card">
+                    <span class="icon">🥇</span>
+                    <h4>Elite Mode</h4>
+                    <p><strong>Persona:</strong> "You are a national-level coach with expertise in biomechanics, sports psychology, and elite competition preparation."</p>
+                    <p style="margin-top: 15px;"><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Advanced biomechanics</li>
+                        <li>Periodization training</li>
+                        <li>Mental conditioning</li>
+                        <li>Tournament preparation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Specialized Personas Within Table Tennis</h3>
+            
+            <div class="example-box">
+                <h4>Domain-Specific Experts</h4>
+                <ul>
+                    <li><strong>Equipment Specialist:</strong> "You are a certified equipment specialist with 15 years of experience matching rubbers to playing styles, having tested over 200 different rubber types."</li>
+                    <li><strong>Sports Psychologist:</strong> "You are a sports psychologist who has worked with Olympic table tennis athletes on performance anxiety and mental resilience."</li>
+                    <li><strong>Fitness Coach:</strong> "You are a strength and conditioning coach specializing in table tennis-specific fitness, injury prevention, and flexibility training."</li>
+                    <li><strong>Video Analyst:</strong> "You are a professional table tennis analyst who has reviewed thousands of matches and can identify tactical patterns and technical flaws."</li>
+                </ul>
+            </div>
+            
+            <h3>Beyond Table Tennis: Universal Applications</h3>
+            
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <h4>Healthcare 🏥</h4>
+                    <p>"You are a board-certified cardiologist with 20 years of experience. Explain heart disease risk factors for a non-medical audience."</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <h4>Programming 💻</h4>
+                    <p>"You are a senior React developer specializing in performance optimization. Review this component for improvements."</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <h4>Business 📊</h4>
+                    <p>"You are a marketing strategist who has launched 50+ successful products. Create a go-to-market strategy."</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <h4>Education 📚</h4>
+                    <p>"You are a high school biology teacher known for making complex topics accessible. Explain photosynthesis to a 9th grader."</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <h4>Creative Writing ✍️</h4>
+                    <p>"You are a noir detective novelist. Write the opening paragraph of a mystery set in 1940s Los Angeles."</p>
+                </div>
+                
+                <div class="benefit-item">
+                    <h4>Finance 💰</h4>
+                    <p>"You are a certified financial planner specializing in retirement planning. Explain 401(k) strategies for someone in their 30s."</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- PART 4: QUIZ -->
+        <section id="quiz">
+            <h2>Test Your Understanding</h2>
+            
+            <p class="intro-text">Complete this quiz to assess your understanding of the Persona Pattern. Select the best answer for each question.</p>
+            
+            <div class="quiz-section">
+                <div class="question">
+                    <h4>Question 1: What is the primary purpose of the Persona Pattern?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="a"> A) To make the AI sound more human and conversational</label>
+                        <label><input type="radio" name="q1" value="b"> B) To tailor AI responses based on a specific role or expertise</label>
+                        <label><input type="radio" name="q1" value="c"> C) To limit what the AI can discuss</label>
+                        <label><input type="radio" name="q1" value="d"> D) To make prompts longer and more complex</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 2: Which prompt demonstrates the BEST use of the Persona Pattern?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="a"> A) "Tell me about table tennis serves"</label>
+                        <label><input type="radio" name="q2" value="b"> B) "You are an expert. Tell me about serves"</label>
+                        <label><input type="radio" name="q2" value="c"> C) "You are Liu Guoliang, legendary coach. Explain advanced serve deception techniques for competitive play"</label>
+                        <label><input type="radio" name="q2" value="d"> D) "Act like you know about table tennis"</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 3: What are the two core concepts of the Persona Pattern?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> A) Role Assignment and Contextual Framing</label>
+                        <label><input type="radio" name="q3" value="b"> B) Length and Complexity</label>
+                        <label><input type="radio" name="q3" value="c"> C) Speed and Accuracy</label>
+                        <label><input type="radio" name="q3" value="d"> D) Grammar and Spelling</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 4: Why would you use different personas in a table tennis training app?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q4" value="a"> A) To confuse users with varying information</label>
+                        <label><input type="radio" name="q4" value="b"> B) To match expertise level and communication style to different user needs</label>
+                        <label><input type="radio" name="q4" value="c"> C) To make the app seem more complicated and advanced</label>
+                        <label><input type="radio" name="q4" value="d"> D) To save development time and resources</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 5: A player asks about footwork. Which persona would give the most biomechanically detailed response?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q5" value="a"> A) "You are a recreational player who enjoys weekend games"</label>
+                        <label><input type="radio" name="q5" value="b"> B) "You are a sports science researcher specializing in table tennis biomechanics"</label>
+                        <label><input type="radio" name="q5" value="c"> C) "You are a table tennis fan who watches tournaments"</label>
+                        <label><input type="radio" name="q5" value="d"> D) "You know about sports and movement"</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 6: According to research, how much does the Persona Pattern improve response relevance?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q6" value="a"> A) 10-20%</label>
+                        <label><input type="radio" name="q6" value="b"> B) 20-30%</label>
+                        <label><input type="radio" name="q6" value="c"> C) 40-60%</label>
+                        <label><input type="radio" name="q6" value="d"> D) 70-80%</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 7: What makes a persona prompt more effective?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q7" value="a"> A) Making it as long as possible</label>
+                        <label><input type="radio" name="q7" value="b"> B) Using generic terms like "expert" or "professional"</label>
+                        <label><input type="radio" name="q7" value="c"> C) Providing specific credentials, specializations, and context</label>
+                        <label><input type="radio" name="q7" value="d"> D) Avoiding any mention of expertise level</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 8: True or False: The Persona Pattern only works for technical or professional topics.</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q8" value="a"> A) True</label>
+                        <label><input type="radio" name="q8" value="b"> B) False</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 9: Which of the following is a benefit of using the Persona Pattern?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q9" value="a"> A) Slower response times</label>
+                        <label><input type="radio" name="q9" value="b"> B) More follow-up questions needed</label>
+                        <label><input type="radio" name="q9" value="c"> C) Improved relevance and user satisfaction</label>
+                        <label><input type="radio" name="q9" value="d"> D) More generic, one-size-fits-all answers</label>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h4>Question 10: What should you do if a persona prompt doesn't give you the desired result?</h4>
+                    <div class="options">
+                        <label><input type="radio" name="q10" value="a"> A) Give up and use generic prompts instead</label>
+                        <label><input type="radio" name="q10" value="b"> B) Refine the persona by making it more specific or adjusting the expertise level</label>
+                        <label><input type="radio" name="q10" value="c"> C) Make the prompt shorter and less detailed</label>
+                        <label><input type="radio" name="q10" value="d"> D) Assume the Persona Pattern doesn't work</label>
+                    </div>
+                </div>
+                
+                <button onclick="checkAnswers()">Submit Quiz</button>
+                <div id="results"></div>
+                
+                <div class="answer-key" style="margin-top: 40px;">
+                    <h5>Answer Key (Reveal after attempting):</h5>
+                    <p><strong>1.</strong> B | <strong>2.</strong> C | <strong>3.</strong> A | <strong>4.</strong> B | <strong>5.</strong> B | <strong>6.</strong> C | <strong>7.</strong> C | <strong>8.</strong> B (False) | <strong>9.</strong> C | <strong>10.</strong> B</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- PART 4: EXERCISES -->
+        <section id="exercises">
+            <h2>Hands-On Exercises</h2>
+            
+            <p class="intro-text">Practice creating and refining persona prompts with these interactive exercises. Type your answers in the text boxes provided.</p>
+            
+            <div class="exercise-box">
+                <h4>🎯 Exercise 1: Transform Generic to Persona</h4>
+                <p>Take this generic prompt and rewrite it using the Persona Pattern. Include a specific role, relevant expertise, and appropriate context.</p>
+                <p><strong>Generic Prompt:</strong> "How do I improve my table tennis footwork?"</p>
+                <textarea id="exercise1" placeholder="Write your persona-based prompt here...
+
+Example structure:
+'You are [specific expert with credentials]. I am [your context/level]. [Your question]'"></textarea>
+                
+                <div class="answer-key">
+                    <h5>Example Answer:</h5>
+                    <p>"You are a biomechanics specialist who has analyzed Olympic-level table tennis movement patterns. I'm an intermediate club player who struggles with court coverage on wide balls. What footwork drills and techniques should I focus on to improve my lateral movement and recovery speed?"</p>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h4>🎯 Exercise 2: Match Persona to Need</h4>
+                <p>For each user need below, write an appropriate persona prompt:</p>
+                
+                <p style="margin-top: 20px;"><strong>Scenario A:</strong> A beginner wants to learn basic table tennis rules</p>
+                <textarea id="exercise2a" placeholder="Your persona prompt for Scenario A..."></textarea>
+                
+                <p style="margin-top: 20px;"><strong>Scenario B:</strong> A competitor wants to analyze their match footage</p>
+                <textarea id="exercise2b" placeholder="Your persona prompt for Scenario B..."></textarea>
+                
+                <p style="margin-top: 20px;"><strong>Scenario C:</strong> A player wants to overcome performance anxiety</p>
+                <textarea id="exercise2c" placeholder="Your persona prompt for Scenario C..."></textarea>
+                
+                <div class="answer-key">
+                    <h5>Example Answers:</h5>
+                    <p><strong>A:</strong> "You are a patient instructor certified in teaching table tennis fundamentals to beginners. Explain the basic rules of table tennis in simple terms."</p>
+                    <p><strong>B:</strong> "You are a video analyst who has reviewed thousands of professional and amateur table tennis matches. Help me analyze my match footage to identify tactical improvements."</p>
+                    <p><strong>C:</strong> "You are a sports psychologist specializing in competitive table tennis and mental performance. How can I manage performance anxiety during important matches?"</p>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h4>🎯 Exercise 3: Refine a Weak Prompt</h4>
+                <p>This prompt is too vague. Rewrite it to be more effective:</p>
+                <p><strong>Weak Prompt:</strong> "You are a coach. How do I serve better?"</p>
+                <p><strong>Problems:</strong> Too generic (what kind of coach?), no specialization, no user context</p>
+                <textarea id="exercise3" placeholder="Your improved prompt..."></textarea>
+                
+                <div class="answer-key">
+                    <h5>Example Answer:</h5>
+                    <p>"You are Timo Boll's former serve coach, known for developing some of Europe's most deceptive serves. I'm a club-level player who wants to add more spin variation to my pendulum serve to create scoring opportunities. What techniques should I focus on?"</p>
+                    <p><strong>Improvements:</strong> Named specific expert role, identified specialization (serve deception), provided user context (club-level), specified clear goal (spin variation for scoring)</p>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h4>🎯 Exercise 4: Multi-Perspective Analysis</h4>
+                <p>Create THREE different persona prompts for the same question, each providing a different perspective:</p>
+                <p><strong>Question:</strong> "Why is my backhand inconsistent?"</p>
+                
+                <p style="margin-top: 20px;"><strong>Persona 1 (Technical Coach):</strong></p>
+                <textarea id="exercise4a" placeholder="Technical coaching perspective..."></textarea>
+                
+                <p style="margin-top: 20px;"><strong>Persona 2 (Sports Psychologist):</strong></p>
+                <textarea id="exercise4b" placeholder="Psychological perspective..."></textarea>
+                
+                <p style="margin-top: 20px;"><strong>Persona 3 (Equipment Specialist):</strong></p>
+                <textarea id="exercise4c" placeholder="Equipment perspective..."></textarea>
+                
+                <div class="answer-key">
+                    <h5>Example Answers:</h5>
+                    <p><strong>1:</strong> "You are a technical coach who specializes in stroke mechanics and biomechanics. Analyze the common technical flaws that cause backhand inconsistency in intermediate players."</p>
+                    <p><strong>2:</strong> "You are a sports psychologist who works with table tennis players. Explain how mental factors like anxiety, overthinking, or lack of confidence might manifest as backhand inconsistency."</p>
+                    <p><strong>3:</strong> "You are an equipment specialist. Discuss how rubber choice, blade characteristics, and equipment setup can contribute to backhand inconsistency issues."</p>
+                </div>
+            </div>
+            
+            <div class="exercise-box">
+                <h4>🎯 Exercise 5: Create Your Own Application</h4>
+                <p>Design a persona for a table tennis AI assistant that serves a specific niche you identify:</p>
+                
+                <p style="margin-top: 15px;"><strong>Your chosen niche:</strong></p>
+                <textarea id="exercise5a" placeholder="Describe your target user group and their needs..."></textarea>
+                
+                <p style="margin-top: 15px;"><strong>Your persona design:</strong></p>
+                <textarea id="exercise5b" placeholder="Create a detailed persona prompt for this niche..."></textarea>
+                
+                <p style="margin-top: 15px;"><strong>Sample interaction:</strong></p>
+                <textarea id="exercise5c" placeholder="Show how this persona would respond to a typical question from your target user..."></textarea>
+            </div>
+            
+            <div class="example-box" style="margin-top: 40px;">
+                <h3>💡 Tips for Success</h3>
+                <ul>
+                    <li><strong>Be specific:</strong> Name actual experts or create detailed fictional ones</li>
+                    <li><strong>Include credentials:</strong> Years of experience, achievements, specializations</li>
+                    <li><strong>Match the level:</strong> Ensure expertise matches the user's needs</li>
+                    <li><strong>Provide context:</strong> Help the persona understand the user's situation</li>
+                    <li><strong>Iterate:</strong> If the first attempt doesn't work, refine and try again</li>
+                </ul>
+            </div>
+        </section>
+        
+        <footer>
+            <h3>🏓 Master the Pattern, Master the Game 🏓</h3>
+            <p>The Persona Pattern: Your Key to Expert-Level AI Interactions</p>
+            <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+                Created for Educational Purposes<br>
+                Prompt Engineering Assignment - The Persona Pattern<br>
+                © 2024 | All examples and content for academic use
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        // Quiz functionality
+        function checkAnswers() {
+            const answers = {
+                q1: 'b', q2: 'c', q3: 'a', q4: 'b', q5: 'b',
+                q6: 'c', q7: 'c', q8: 'b', q9: 'c', q10: 'b'
+            };
+            
+            let score = 0;
+            let total = 10;
+            
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) {
+                    score++;
+                }
+            }
+            
+            const results = document.getElementById('results');
+            const percentage = (score / total) * 100;
+            
+            let message = `You scored ${score} out of ${total} (${percentage}%)! `;
+            let emoji = '';
+            
+            if (percentage === 100) {
+                message += "Perfect score! You're a Persona Pattern expert!";
+                emoji = "🏆";
+            } else if (percentage >= 80) {
+                message += "Excellent work! You have a strong understanding of the pattern.";
+                emoji = "🎯";
+            } else if (percentage >= 60) {
+                message += "Good effort! Review the material to strengthen your understanding.";
+                emoji = "👍";
+            } else {
+                message += "Keep learning! Review the concepts above and try again.";
+                emoji = "📚";
+            }
+            
+            results.innerHTML = emoji + " " + message;
+            results.style.display = 'block';
+            results.style.color = percentage >= 80 ? '#27ae60' : percentage >= 60 ? '#f39c12' : '#e74c3c';
+            results.style.background = percentage >= 80 ? '#d4edda' : percentage >= 60 ? '#fff3cd' : '#f8d7da';
+            results.style.border = `2px solid ${percentage >= 80 ? '#28a745' : percentage >= 60 ? '#ffc107' : '#dc3545'}`;
+            
+            // Scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Scroll to top functionality
+        window.onscroll = function() {
+            const scrollTop = document.getElementById('scrollTop');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                scrollTop.style.display = 'flex';
+            } else {
+                scrollTop.style.display = 'none';
+            }
+        };
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
